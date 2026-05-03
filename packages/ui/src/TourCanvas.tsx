@@ -45,7 +45,12 @@ export function TourCanvas({
 }: TourCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const wrapRef = useRef<HTMLDivElement>(null);
-  const [activePhaseIndex, setActivePhaseIndex] = useState(0);
+  // Phase index lives in a ref, not state — the canvas is drawn imperatively
+  // every onUpdate, so React re-renders aren't needed. Putting it in state
+  // (and including it in the useEffect dep list) caused the ScrollTrigger to
+  // be killed and recreated on every phase change, which dropped scroll
+  // updates and made the canvas appear stuck.
+  const activePhaseIndexRef = useRef(0);
   const [_isMobile, setIsMobile] = useState(false);
 
   // Initialize mobile flag + listen for resize
@@ -104,7 +109,7 @@ export function TourCanvas({
         for (let k = 0; k < cumTops.length; k++) {
           if (scrollPx >= cumTops[k]) i = k;
         }
-        if (i !== activePhaseIndex) setActivePhaseIndex(i);
+        if (i !== activePhaseIndexRef.current) activePhaseIndexRef.current = i;
         const phase = spec.phases[i];
         const phaseStart = cumTops[i];
         const phaseHeight = (phaseHeights[i] / 100) * vh;
@@ -135,7 +140,9 @@ export function TourCanvas({
     void preloadWindow(spec.phases[0], isMobileViewport(), 0);
 
     return () => { st.kill(); };
-  }, [spec, phaseHeights, bg, activePhaseIndex, reduced]);
+    // NB: activePhaseIndex intentionally NOT in deps — it's a ref, not state.
+    // Including it here previously caused a kill/recreate loop on every phase change.
+  }, [spec, phaseHeights, bg, reduced]);
 
   // Reduced-motion path: render a static <picture> per phase, stacked.
   if (reduced) {
@@ -192,7 +199,6 @@ export function TourCanvas({
           canvas using its own logic. */}
       <div
         ref={wrapRef}
-        data-active-phase={spec.phases[activePhaseIndex]?.phaseId}
         style={{
           height: `${phaseHeights.reduce((a, b) => a + b, 0)}vh`,
           position: 'relative',
