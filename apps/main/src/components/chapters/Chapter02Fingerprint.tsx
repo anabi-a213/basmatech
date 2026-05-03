@@ -9,7 +9,7 @@ export type Chapter02Props = {
 };
 
 const FRAME_COUNT = 121;
-const FRAME_PATH = '/frames/seq1/frame-';
+const FRAME_PATH = '/frames/chapter-02/frame-';
 
 /**
  * Chapter 02 — The Fingerprint.

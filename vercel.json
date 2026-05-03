@@ -1,7 +1,0 @@
-{
-  "$schema": "https://openapi.vercel.sh/vercel.json",
-  "framework": "nextjs",
-  "buildCommand": "pnpm install --frozen-lockfile=false && pnpm --filter portfolio build",
-  "installCommand": "echo 'using buildCommand to install + build the workspace'",
-  "outputDirectory": "apps/portfolio/.next"
-}

@@ -1,0 +1,18 @@
+{
+  "02": {
+    "request_id": "019ded05-1cbd-73f2-87d8-94e66029c003",
+    "status_url": "https://queue.fal.run/fal-ai/kling-video/requests/019ded05-1cbd-73f2-87d8-94e66029c003/status"
+  },
+  "03": {
+    "request_id": "019ded05-227a-7851-b59f-629f98c66dc2",
+    "status_url": "https://queue.fal.run/fal-ai/kling-video/requests/019ded05-227a-7851-b59f-629f98c66dc2/status"
+  },
+  "04": {
+    "request_id": "019ded05-28c1-74a0-859f-57ea78eed7d6",
+    "status_url": "https://queue.fal.run/fal-ai/kling-video/requests/019ded05-28c1-74a0-859f-57ea78eed7d6/status"
+  },
+  "05": {
+    "request_id": "019ded05-2e48-7bc2-bc6c-84ad4e1b89f6",
+    "status_url": "https://queue.fal.run/fal-ai/kling-video/requests/019ded05-2e48-7bc2-bc6c-84ad4e1b89f6/status"
+  }
+}

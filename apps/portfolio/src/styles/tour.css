@@ -6,6 +6,11 @@
    flashes between sections. The cream canvas base is overridden here. */
 html, body { background: #0F1020; }
 
+/* Smooth touch scroll behavior on mobile (iOS especially).
+   overscroll-behavior prevents bounce-chain to a parent container. */
+html { -webkit-text-size-adjust: 100%; overscroll-behavior-y: none; }
+body { touch-action: pan-y; -webkit-tap-highlight-color: transparent; }
+
 /* — Foyer (entry full-bleed) — */
 .tour-foyer {
   position: relative;
@@ -424,3 +429,38 @@ html[dir="rtl"] .tour-corridor__caption { font-family: var(--font-ar); letter-sp
   transition: transform 80ms linear;
 }
 html[dir="rtl"] .tour-progress__bar { transform-origin: right center; }
+
+/* — Mobile + tablet responsive — */
+@media (max-width: 768px) {
+  /* Shorter project sections on mobile so visitors don't scroll forever
+     on a small screen. 280vh = 140vh frame scrub + 100vh end-frame dwell + 40vh release. */
+  .tour-project { height: 280vh; }
+  .tour-project__inner { padding: 80px 20px 80px; }
+
+  /* Title scales smaller on narrow screens */
+  .tour-project__title-ar { font-size: clamp(28px, 7vw, 44px); }
+  .tour-project__title-en { font-size: clamp(24px, 6.5vw, 40px); }
+  .tour-project__outcome { font-size: clamp(14px, 1.6vh, 17px); }
+
+  /* Stats: 2 columns on mobile, was 4 on desktop */
+  .tour-project__stats { grid-template-columns: repeat(2, 1fr); gap: 12px 16px; }
+  .tour-project__stat-value { font-size: 16px; }
+
+  /* Foyer headline tighter */
+  .tour-foyer__inner { padding: 64px 20px; }
+  .tour-foyer__headline-ar { font-size: clamp(32px, 9vw, 56px); max-width: 100%; }
+  .tour-foyer__headline-en { font-size: clamp(28px, 7vw, 48px); max-width: 100%; }
+  .tour-foyer__sub { font-size: 14px; }
+  .tour-foyer__hint { padding-bottom: 20px; }
+
+  /* Closing CTA buttons stack vertically */
+  .tour-closing__inner { padding: 80px 20px; }
+
+  /* Hide the fixed top progress bar on small screens — it's noise on tiny viewports */
+  .tour-progress { height: 1px; }
+}
+
+/* Reduced motion: turn off any decorative animations, keep canvas static */
+@media (prefers-reduced-motion: reduce) {
+  .tour-foyer__hint::after { animation: none; }
+}

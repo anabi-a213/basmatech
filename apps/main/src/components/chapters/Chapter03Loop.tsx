@@ -9,7 +9,7 @@ export type Chapter03Props = {
 };
 
 const FRAME_COUNT = 121;
-const FRAME_PATH = '/frames/seq3/frame-';
+const FRAME_PATH = '/frames/chapter-03/frame-';
 
 /**
  * Chapter 03 — The Loop.

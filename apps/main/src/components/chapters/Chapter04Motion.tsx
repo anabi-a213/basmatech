@@ -9,7 +9,7 @@ export type Chapter04Props = {
 };
 
 const FRAME_COUNT = 121;
-const FRAME_PATH = '/frames/seq4/frame-';
+const FRAME_PATH = '/frames/chapter-04/frame-';
 
 /**
  * Chapter 04 — In Motion.
