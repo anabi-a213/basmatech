@@ -199,6 +199,15 @@ export function TourCanvas({
   );
 }
 
+const TINT_HEX_FALLBACK: Record<string, string> = {
+  mint: '#5FE99A',
+  sky: '#5FA9F0',
+  lavender: '#9F86E0',
+  pink: '#FFD4E2',
+  magenta: '#FF5A9E',
+  cream: '#FFF5E6',
+};
+
 function drawFrame(
   canvas: HTMLCanvasElement | null,
   phase: Phase,
@@ -225,7 +234,37 @@ function drawFrame(
   ctx.fillStyle = bg;
   ctx.fillRect(0, 0, cw, ch);
 
-  if (!cached) return;
+  if (!cached) {
+    // Phase 1 placeholder mode: no frame loaded yet (Phase 2 will fix this).
+    // Paint the phase tint as a soft radial gradient so the user can see the
+    // canvas + scroll mapping is working even without real assets.
+    const tintColor = TINT_HEX_FALLBACK[phase.tint] ?? '#FF5A9E';
+    const grad = ctx.createRadialGradient(
+      cw / 2, ch / 2, 0,
+      cw / 2, ch / 2, Math.max(cw, ch) * 0.7,
+    );
+    grad.addColorStop(0, tintColor);
+    grad.addColorStop(1, bg);
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, cw, ch);
+
+    // Phase label
+    ctx.fillStyle = 'rgba(245, 245, 248, 0.92)';
+    ctx.font = '700 ' + Math.round(Math.min(cw, ch) * 0.05) + 'px system-ui, -apple-system, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(phase.label, cw / 2, ch / 2 - 30);
+
+    // Frame counter
+    ctx.fillStyle = 'rgba(245, 245, 248, 0.55)';
+    ctx.font = '500 ' + Math.round(Math.min(cw, ch) * 0.02) + 'px ui-monospace, "SF Mono", monospace';
+    ctx.fillText(
+      `${phase.phaseId} · frame ${frameIndex} / ${phase.endFrame}`,
+      cw / 2,
+      ch / 2 + 24,
+    );
+    return;
+  }
   // ImageBitmap and HTMLImageElement both expose width/height directly.
   const w = (cached as ImageBitmap | HTMLImageElement).width;
   const h = (cached as ImageBitmap | HTMLImageElement).height;
