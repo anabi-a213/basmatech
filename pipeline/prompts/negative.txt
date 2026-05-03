@@ -1,0 +1,15 @@
+NEGATIVE PROMPT MASTER LIST
+===========================
+Append this verbatim to every nano-banana and Kling job's negative
+prompt field.
+
+warped perspective, melting wood grain, impossible joinery, lumpy
+stone, fake plants, plastic-looking metal, smudged reflections,
+uncanny depth-of-field, blurred edges where edges should be sharp,
+duplicated objects, floating objects, broken symmetry on built-ins,
+visible cable runs, neon tube shapes, gloss plastic, flared lens
+artifacts, oversharpened textures, AI watermark, fingers, faces,
+hands, signage, text, logos, brand names, fish-eye distortion,
+tilted horizon, HDR halos, posterization, banding, lumpy biomorphic
+forms, blob shapes, organic mounds where geometric architecture is
+expected.

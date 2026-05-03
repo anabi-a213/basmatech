@@ -15,6 +15,9 @@
     "lint": "echo 'lint placeholder'",
     "clean": "rm -rf .turbo dist"
   },
+  "dependencies": {
+    "@basmatech/ui": "workspace:*"
+  },
   "devDependencies": {
     "typescript": "^5.7.2"
   }

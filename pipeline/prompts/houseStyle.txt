@@ -1,0 +1,44 @@
+HOUSE STYLE PROMPT BLOCK
+========================
+Reconciled from BRIEF.md (Saudi interactive-experiences studio: kinetic
+walls, games, kinetic installations, screens with AI mapping, immersive
+rooms, 24/7 operations) over the planning brief's "luxury bespoke
+interior" framing where the two disagreed.
+
+Editorial architectural photography in the language of Iwan Baan,
+Hélène Binet, and Fernando Guerra, with Wallpaper-magazine staging.
+Shot on a medium-format Hasselblad H6D-100c with a 35mm tilt-shift
+lens equivalent. ARRI Alexa 65 acceptable for installation interiors
+where the wider sensor matters. Tungsten warmth keyed to 3200K mixed
+with ambient daylight at 5600K bouncing from a single tall window
+camera-left. Camera height 1.55m, level horizon, no Dutch tilt,
+parallel verticals.
+
+Color grade: low-contrast filmic. Blacks lifted to charcoal #1c1c1c.
+Highlights rolled to bone #f3ede2. Midtones biased warm-neutral.
+Brand accent magenta (#FF5A9E or #C73D7E) appears as a discrete
+single-line glow or beacon — never as wash, never as gradient,
+never as overlay text. Pastel atmospheric haze (mint #5FE99A,
+sky #5FA9F0, lavender #9F86E0, pink #FFD4E2, cream #FFF5E6)
+appears only as ambient room tone, never as dominant subject.
+
+Materials palette (use freely, mixed): champagne-bronze metal,
+brushed steel, polished basalt, bookmatched cream travertine,
+hand-rubbed brass, smoked walnut, raw oak, matte concrete, woven
+linen, lime plaster. LED edge-lighting and luminous magenta light
+columns ARE allowed (they are core to the brand's installations);
+avoid neon tube shapes and visible cable runs.
+
+Aspect ratio 16:9. Resolution 1928x1072 desktop / 1280x720 mobile.
+Seed locked per project (see packages/content/src/seeds.ts). When
+generating any subsequent frame for a project (walk start, walk end,
+bridge frames touching it), pass the canonical hero JPG as a
+reference image so identity is preserved.
+
+NO PEOPLE. NO TEXT, NO SIGNAGE, NO LOGOS, NO BRAND NAMES.
+NO em-dashes anywhere visible in the image.
+
+For walk-start frames, describe ONLY the camera delta and the
+absence delta from the hero ("same scene, same camera angle, same
+lighting, ONLY change: remove the kinetic wall, leave the wall
+plain matte cream"). Do NOT redescribe the room.
