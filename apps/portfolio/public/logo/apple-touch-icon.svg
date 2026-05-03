@@ -1,0 +1,36 @@
+<!-- Basma Tech Apple Touch Icon 180x180 — Liquid Pastel system (2026-05) — pastel-field rounded square -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180" width="180" height="180">
+  <defs>
+    <linearGradient id="liquid-mint" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#A8E5C5"/>
+      <stop offset="100%" stop-color="#5FE99A"/>
+    </linearGradient>
+    <linearGradient id="liquid-azure" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#B5D5EE"/>
+      <stop offset="100%" stop-color="#5FA9F0"/>
+    </linearGradient>
+    <linearGradient id="liquid-pink" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#EFD3DD"/>
+      <stop offset="100%" stop-color="#FF5A9E"/>
+    </linearGradient>
+    <linearGradient id="field-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#C8EAD6"/>
+      <stop offset="33%" stop-color="#BEDDF0"/>
+      <stop offset="66%" stop-color="#D4CCEA"/>
+      <stop offset="100%" stop-color="#EFD3DD"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Pastel-field rounded square (iOS clips automatically) -->
+  <rect width="180" height="180" rx="24" ry="24" fill="url(#field-bg)"/>
+
+  <!-- Stacked-layer mark, centered -->
+  <g transform="translate(90, 90) scale(1.15)">
+    <path d="M -55 -8 Q -42 -28, -10 -32 Q 22 -32, 50 -12 Q 38 -22, 8 -24 Q -22 -24, -48 -8 Z"
+          fill="url(#liquid-mint)" opacity="0.92" transform="translate(0,-26)"/>
+    <path d="M -55 -8 Q -42 -28, -10 -32 Q 22 -32, 50 -12 Q 38 -22, 8 -24 Q -22 -24, -48 -8 Z"
+          fill="url(#liquid-azure)" opacity="0.92"/>
+    <path d="M -55 -8 Q -42 -28, -10 -32 Q 22 -32, 50 -12 Q 38 -22, 8 -24 Q -22 -24, -48 -8 Z"
+          fill="url(#liquid-pink)" opacity="0.92" transform="translate(0,26)"/>
+  </g>
+</svg>

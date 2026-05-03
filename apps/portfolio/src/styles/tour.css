@@ -1,0 +1,426 @@
+/* apps/portfolio — tour-specific full-bleed styles.
+   Imported by globals.css. Every section is 100vh+, content is overlaid,
+   no boxed cards. */
+
+/* Dark body background covers the whole tour so there are no white
+   flashes between sections. The cream canvas base is overridden here. */
+html, body { background: #0F1020; }
+
+/* — Foyer (entry full-bleed) — */
+.tour-foyer {
+  position: relative;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  background: #0F1020;
+}
+.tour-foyer__photo {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  filter: brightness(0.7);
+}
+.tour-foyer__veil {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(15, 16, 32, 0.45) 0%, rgba(15, 16, 32, 0.0) 30%, rgba(15, 16, 32, 0.85) 100%),
+    radial-gradient(ellipse at 50% 50%, rgba(15, 16, 32, 0) 30%, rgba(15, 16, 32, 0.4) 100%);
+}
+.tour-foyer__inner {
+  position: relative;
+  z-index: 2;
+  height: 100%;
+  display: grid;
+  grid-template-rows: 1fr auto auto 1fr;
+  align-items: center;
+  justify-items: center;
+  padding: clamp(64px, 10vh, 120px) clamp(20px, 5vw, 80px);
+  text-align: center;
+  color: #F5F5F8;
+}
+.tour-foyer__overline {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(245, 245, 248, 0.65);
+  display: inline-flex;
+  align-items: center;
+  gap: 16px;
+}
+.tour-foyer__overline::before,
+.tour-foyer__overline::after {
+  content: '';
+  width: 32px;
+  height: 1px;
+  background: var(--magenta);
+}
+.tour-foyer__eyebrow {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(245, 245, 248, 0.85);
+  margin-top: 24px;
+}
+.tour-foyer__headline-ar {
+  font-family: var(--font-ar);
+  font-weight: 900;
+  font-size: clamp(40px, 7vw, 100px);
+  line-height: 1.1;
+  margin: 24px 0 0;
+  max-width: 14ch;
+  text-shadow: 0 4px 32px rgba(0, 0, 0, 0.5);
+}
+.tour-foyer__headline-en {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(36px, 5.6vw, 88px);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  margin: 24px 0 0;
+  max-width: 18ch;
+  text-shadow: 0 4px 32px rgba(0, 0, 0, 0.5);
+}
+.tour-foyer__sub {
+  font-size: clamp(15px, 1.3vw, 19px);
+  line-height: 1.6;
+  color: rgba(245, 245, 248, 0.85);
+  max-width: 56ch;
+  margin: 24px auto 0;
+}
+html[dir="rtl"] .tour-foyer__sub { font-family: var(--font-ar); }
+.tour-foyer__hint {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(245, 245, 248, 0.7);
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  align-self: end;
+  padding-bottom: 32px;
+}
+.tour-foyer__hint::after {
+  content: '';
+  width: 1px;
+  height: 48px;
+  background: linear-gradient(180deg, var(--magenta) 0%, transparent 100%);
+  animation: tour-bounce 1.8s var(--ease-in-out) infinite;
+}
+@keyframes tour-bounce {
+  0%, 100% { transform: scaleY(1); transform-origin: top; }
+  50% { transform: scaleY(0.5); transform-origin: top; }
+}
+
+/* — Project room (full-bleed scroll-locked canvas, sticky content) — */
+.tour-project {
+  position: relative;
+  /* 400vh = 200vh frame scrub + 150vh end-frame dwell + 50vh release.
+     Long airtime so every walk-in frame is visible at human scroll speed,
+     and the fully-revealed installation holds for over a viewport-and-a-half
+     before the next project's empty start frame appears. */
+  height: 400vh;
+  width: 100vw;
+  /* IMPORTANT: do not set overflow:hidden here. Sticky positioning on
+     `.tour-project__sticky` is broken when any ancestor has overflow other
+     than visible. Section width is already 100vw so horizontal overflow is fine. */
+}
+.tour-project__sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+}
+.tour-project__photo {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  transition: transform var(--dur-long) var(--ease-out);
+  will-change: transform;
+}
+.tour-project__veil {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(15, 16, 32, 0.65) 0%, rgba(15, 16, 32, 0.18) 28%, rgba(15, 16, 32, 0.18) 60%, rgba(15, 16, 32, 0.92) 100%);
+}
+.tour-project__inner {
+  position: relative;
+  z-index: 2;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: clamp(80px, 12vh, 120px) clamp(24px, 6vw, 96px);
+  color: #F5F5F8;
+}
+.tour-project__top {
+  display: flex;
+  justify-content: space-between;
+  gap: 32px;
+  flex-wrap: wrap;
+}
+.tour-project__num {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--magenta);
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+}
+.tour-project__num::before {
+  content: '';
+  width: 32px;
+  height: 1px;
+  background: var(--magenta);
+}
+.tour-project__category {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(245, 245, 248, 0.7);
+}
+.tour-project__bottom {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 32px;
+}
+@media (min-width: 980px) {
+  .tour-project__bottom { grid-template-columns: minmax(0, 5fr) minmax(0, 4fr); align-items: end; }
+}
+.tour-project__title-ar {
+  font-family: var(--font-ar);
+  font-weight: 900;
+  font-size: clamp(40px, 6vw, 88px);
+  line-height: 1.1;
+  margin: 0 0 16px;
+  text-shadow: 0 4px 32px rgba(0, 0, 0, 0.5);
+}
+.tour-project__title-en {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(36px, 5.2vw, 76px);
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+  margin: 0 0 16px;
+  text-shadow: 0 4px 32px rgba(0, 0, 0, 0.5);
+}
+.tour-project__meta {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(245, 245, 248, 0.7);
+  margin-bottom: 16px;
+}
+.tour-project__outcome {
+  font-family: var(--font-editorial);
+  font-style: italic;
+  font-size: clamp(16px, 1.5vw, 22px);
+  line-height: 1.5;
+  color: rgba(245, 245, 248, 0.95);
+  max-width: 38ch;
+  margin: 0;
+}
+html[dir="rtl"] .tour-project__outcome {
+  font-family: var(--font-ar);
+  font-style: normal;
+  font-weight: 700;
+}
+.tour-project__stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px 24px;
+  border-top: 1px solid rgba(245, 245, 248, 0.18);
+  padding-top: 24px;
+}
+@media (min-width: 700px) { .tour-project__stats { grid-template-columns: repeat(4, 1fr); } }
+.tour-project__stat-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(245, 245, 248, 0.55);
+  margin-bottom: 6px;
+}
+.tour-project__stat-value {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: clamp(18px, 1.6vw, 24px);
+  color: rgba(245, 245, 248, 0.95);
+}
+
+/* — Cross-project transition (unique scroll-locked dissolve) — */
+.tour-transition {
+  position: relative;
+  /* 140vh = 100vh full scrub through 121 frames + 40vh blend into next.
+     Keeps transitions feeling like quick visual handoffs, not chapters. */
+  height: 140vh;
+  width: 100vw;
+}
+.tour-transition__sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+}
+
+/* — Corridor scroll (legacy, retained for reference) — */
+.tour-corridor {
+  position: relative;
+  height: 220vh;
+  width: 100vw;
+  /* No overflow:hidden — see note on .tour-project. */
+}
+.tour-corridor__sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+}
+.tour-corridor__tint {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  mix-blend-mode: screen;
+  opacity: 0.45;
+}
+.tour-corridor__tint--mint    { background: radial-gradient(ellipse at 50% 60%, rgba(95, 233, 154, 0.55) 0%, transparent 60%); }
+.tour-corridor__tint--sky     { background: radial-gradient(ellipse at 50% 60%, rgba(95, 169, 240, 0.55) 0%, transparent 60%); }
+.tour-corridor__tint--lavender{ background: radial-gradient(ellipse at 50% 60%, rgba(159, 134, 224, 0.55) 0%, transparent 60%); }
+.tour-corridor__tint--pink    { background: radial-gradient(ellipse at 50% 60%, rgba(255, 212, 226, 0.55) 0%, transparent 60%); }
+.tour-corridor__tint--magenta { background: radial-gradient(ellipse at 50% 60%, rgba(255, 90, 158, 0.5) 0%, transparent 60%); }
+.tour-corridor__tint--cream   { background: radial-gradient(ellipse at 50% 60%, rgba(255, 240, 220, 0.55) 0%, transparent 60%); }
+.tour-corridor__progress {
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 2px;
+  z-index: 3;
+  background: rgba(255, 255, 255, 0.1);
+}
+.tour-corridor__progress::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--magenta);
+  transform-origin: left center;
+  transform: scaleX(var(--p, 0));
+}
+html[dir="rtl"] .tour-corridor__progress::after { transform-origin: right center; }
+.tour-corridor__caption {
+  position: absolute;
+  z-index: 3;
+  bottom: 48px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(245, 245, 248, 0.75);
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.6);
+  white-space: nowrap;
+}
+html[dir="rtl"] .tour-corridor__caption { font-family: var(--font-ar); letter-spacing: 0; font-size: 13px; }
+
+/* — Closing — */
+.tour-closing {
+  position: relative;
+  min-height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  background: #0F1020;
+}
+.tour-closing__photo {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  filter: brightness(0.55);
+}
+.tour-closing__veil {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(15, 16, 32, 0.5) 0%, rgba(15, 16, 32, 0.85) 100%);
+}
+.tour-closing__inner {
+  position: relative;
+  z-index: 2;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: clamp(80px, 12vh, 160px) clamp(24px, 6vw, 80px);
+  color: #F5F5F8;
+}
+.tour-closing__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 32px;
+  border-radius: var(--radius-pill);
+  background: var(--magenta);
+  color: #fff;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: transform var(--dur-medium) var(--ease-out), box-shadow var(--dur-medium) var(--ease-out);
+  box-shadow: 0 8px 32px rgba(255, 90, 158, 0.5);
+}
+.tour-closing__cta:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 56px rgba(255, 90, 158, 0.7);
+}
+.tour-closing__cta-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 28px;
+  border-radius: var(--radius-pill);
+  border: 1px solid rgba(245, 245, 248, 0.4);
+  color: rgba(245, 245, 248, 0.92);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+/* — Top progress strip (sticky tour-wide indicator) — */
+.tour-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  z-index: 60;
+  background: rgba(0, 0, 0, 0.08);
+  pointer-events: none;
+}
+.tour-progress__bar {
+  height: 100%;
+  background: linear-gradient(90deg, var(--magenta) 0%, #FF8FB6 100%);
+  transform-origin: left center;
+  transform: scaleX(var(--tp, 0));
+  transition: transform 80ms linear;
+}
+html[dir="rtl"] .tour-progress__bar { transform-origin: right center; }

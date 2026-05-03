@@ -1,0 +1,29 @@
+<!-- Basma Tech Monochrome Logo — Liquid Pastel system (2026-05) — single ink color for print -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 160" width="420" height="160">
+  <!-- Stacked-layer mark — outlined (no fills) for mono print -->
+  <g transform="translate(80, 80)" fill="none" stroke="#14152B" stroke-width="1.6" stroke-linejoin="round">
+    <path d="M -55 -8 Q -42 -28, -10 -32 Q 22 -32, 50 -12 Q 38 -22, 8 -24 Q -22 -24, -48 -8 Z"
+          opacity="0.5" transform="translate(0,-26)"/>
+    <path d="M -55 -8 Q -42 -28, -10 -32 Q 22 -32, 50 -12 Q 38 -22, 8 -24 Q -22 -24, -48 -8 Z"
+          opacity="0.85"/>
+    <path d="M -55 -8 Q -42 -28, -10 -32 Q 22 -32, 50 -12 Q 38 -22, 8 -24 Q -22 -24, -48 -8 Z"
+          opacity="0.5" transform="translate(0,26)"/>
+  </g>
+
+  <!-- Wordmark: solid #14152B ink -->
+  <g transform="translate(170, 0)">
+    <text x="0" y="78"
+          font-family="Bricolage Grotesque, system-ui, sans-serif"
+          font-weight="800"
+          font-size="44"
+          letter-spacing="-1"
+          fill="#14152B">Basma Tech</text>
+    <text x="0" y="118"
+          font-family="Cairo, sans-serif"
+          font-weight="900"
+          font-size="32"
+          fill="#14152B"
+          direction="rtl"
+          unicode-bidi="bidi-override">بصمة تك</text>
+  </g>
+</svg>

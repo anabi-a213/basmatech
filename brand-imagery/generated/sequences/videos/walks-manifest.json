@@ -1,0 +1,38 @@
+{
+  "01": {
+    "request_id": "019deb17-5f89-7011-8a31-a79f5c87ae4f",
+    "status_url": "https://queue.fal.run/fal-ai/kling-video/requests/019deb17-5f89-7011-8a31-a79f5c87ae4f/status"
+  },
+  "02": {
+    "request_id": "019deb17-6762-7842-aeac-462efdc3e01b",
+    "status_url": "https://queue.fal.run/fal-ai/kling-video/requests/019deb17-6762-7842-aeac-462efdc3e01b/status"
+  },
+  "03": {
+    "request_id": "019deb17-6eae-7c22-9e3a-4f413e668117",
+    "status_url": "https://queue.fal.run/fal-ai/kling-video/requests/019deb17-6eae-7c22-9e3a-4f413e668117/status"
+  },
+  "04": {
+    "request_id": "019deb17-76af-7a93-82dc-e70b2eb05cd7",
+    "status_url": "https://queue.fal.run/fal-ai/kling-video/requests/019deb17-76af-7a93-82dc-e70b2eb05cd7/status"
+  },
+  "05": {
+    "request_id": "019deb17-8095-7091-9064-a0cd4e9781cd",
+    "status_url": "https://queue.fal.run/fal-ai/kling-video/requests/019deb17-8095-7091-9064-a0cd4e9781cd/status"
+  },
+  "06": {
+    "request_id": "019deb17-88f2-7181-9a47-c0666f5f01e3",
+    "status_url": "https://queue.fal.run/fal-ai/kling-video/requests/019deb17-88f2-7181-9a47-c0666f5f01e3/status"
+  },
+  "07": {
+    "request_id": "019deb17-8f6d-7943-a522-c0b2d52b4cc6",
+    "status_url": "https://queue.fal.run/fal-ai/kling-video/requests/019deb17-8f6d-7943-a522-c0b2d52b4cc6/status"
+  },
+  "08": {
+    "request_id": "019deb17-94e7-7e92-9c7b-78960f964601",
+    "status_url": "https://queue.fal.run/fal-ai/kling-video/requests/019deb17-94e7-7e92-9c7b-78960f964601/status"
+  },
+  "09": {
+    "request_id": "019deb17-9db3-7aa0-81a0-136a6360e290",
+    "status_url": "https://queue.fal.run/fal-ai/kling-video/requests/019deb17-9db3-7aa0-81a0-136a6360e290/status"
+  }
+}

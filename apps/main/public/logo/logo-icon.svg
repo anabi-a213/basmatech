@@ -1,0 +1,27 @@
+<!-- Basma Tech Icon — stacked-layer liquid mark (256x256) — Liquid Pastel system (2026-05) -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+  <defs>
+    <linearGradient id="liquid-mint" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#A8E5C5"/>
+      <stop offset="100%" stop-color="#5FE99A"/>
+    </linearGradient>
+    <linearGradient id="liquid-azure" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#B5D5EE"/>
+      <stop offset="100%" stop-color="#5FA9F0"/>
+    </linearGradient>
+    <linearGradient id="liquid-pink" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#EFD3DD"/>
+      <stop offset="100%" stop-color="#FF5A9E"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Stacked-layer liquid mark, scaled up & centered -->
+  <g transform="translate(128, 128) scale(2.0)">
+    <path d="M -55 -8 Q -42 -28, -10 -32 Q 22 -32, 50 -12 Q 38 -22, 8 -24 Q -22 -24, -48 -8 Z"
+          fill="url(#liquid-mint)" opacity="0.92" transform="translate(0,-26)"/>
+    <path d="M -55 -8 Q -42 -28, -10 -32 Q 22 -32, 50 -12 Q 38 -22, 8 -24 Q -22 -24, -48 -8 Z"
+          fill="url(#liquid-azure)" opacity="0.92"/>
+    <path d="M -55 -8 Q -42 -28, -10 -32 Q 22 -32, 50 -12 Q 38 -22, 8 -24 Q -22 -24, -48 -8 Z"
+          fill="url(#liquid-pink)" opacity="0.92" transform="translate(0,26)"/>
+  </g>
+</svg>

@@ -1,0 +1,162 @@
+/* @basmatech/design-system — globals.css
+   Base reset + body + bilingual + reveal utilities. Tokens come from tokens.css.
+   Import order in apps: tokens.css FIRST, then globals.css. */
+
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+html {
+  scroll-behavior: auto; /* Lenis owns this */
+  -webkit-text-size-adjust: 100%;
+}
+body {
+  font-family: var(--font-body);
+  color: var(--ink);
+  background: var(--field-cream);
+  overflow-x: hidden;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+img, svg { display: block; max-width: 100%; }
+a { color: inherit; text-decoration: none; }
+button {
+  font: inherit;
+  cursor: pointer;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  padding: 0;
+}
+
+/* — RTL handling —
+   Cairo for body when AR. Bricolage when Latin. Body always inherits Manrope
+   for English text inside AR pages via the .latin escape hatch. */
+html[dir="rtl"] body { font-family: var(--font-ar); }
+html[dir="rtl"] .latin { font-family: var(--font-display); }
+html[dir="ltr"] .arabic { font-family: var(--font-ar); }
+
+/* — Selection — */
+::selection {
+  background: var(--magenta);
+  color: var(--canvas);
+}
+
+/* — Focus visibility — */
+:focus-visible {
+  outline: 2px solid var(--magenta);
+  outline-offset: 4px;
+  border-radius: var(--radius-sm);
+}
+
+/* — Page-level type defaults — */
+h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+}
+html[dir="rtl"] h1,
+html[dir="rtl"] h2,
+html[dir="rtl"] h3,
+html[dir="rtl"] h4,
+html[dir="rtl"] h5,
+html[dir="rtl"] h6 {
+  font-family: var(--font-ar);
+  font-weight: 900;
+  letter-spacing: 0;
+  line-height: 1.2;
+}
+p { margin: 0; }
+
+/* — Reveal utilities (used by SplitReveal + chapter copy) — */
+.reveal-init {
+  opacity: 0;
+  transform: translateY(12px);
+  transition:
+    opacity 700ms var(--ease-out),
+    transform 700ms var(--ease-out);
+  will-change: opacity, transform;
+}
+.reveal-on { opacity: 1; transform: translateY(0); }
+
+.reveal-init .glyph,
+.reveal-init .word {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(0.6em);
+  transition:
+    opacity 600ms var(--ease-out),
+    transform 600ms var(--ease-out);
+  will-change: opacity, transform;
+}
+.reveal-init .glyph.reveal-on,
+.reveal-init .word.reveal-on {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* — Eyebrow accent bar — */
+.eyebrow-accent {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+.eyebrow-accent::before {
+  content: '';
+  display: inline-block;
+  width: 32px;
+  height: 1px;
+  background: var(--magenta);
+}
+
+/* — Frame canvas — */
+.frame-canvas {
+  display: block;
+  width: 100vw;
+  height: 100vh;
+  background: #0F1015;
+}
+.frame-canvas--light { background: var(--field-cream); }
+
+/* — Sticky pin container — */
+.scroll-frame {
+  position: relative;
+  width: 100%;
+}
+.scroll-frame__sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+}
+
+/* — Chapter overlay (text on top of frame canvas) — */
+.chapter-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  padding: clamp(20px, 5vw, 60px);
+}
+.chapter-overlay__inner {
+  max-width: 900px;
+  width: 100%;
+  text-align: center;
+}
+
+/* — Reduced motion — */
+@media (prefers-reduced-motion: reduce) {
+  .reveal-init { opacity: 1; transform: none; }
+  .reveal-init .glyph,
+  .reveal-init .word { opacity: 1; transform: none; }
+}

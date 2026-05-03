@@ -1,0 +1,131 @@
+/* tokens.css — Basma Tech design tokens — Liquid Pastel system (2026-05-01) */
+/* Reference: Meta-style soft pastel field with translucent stacked-layer 3D shapes */
+
+:root {
+  /* — Field surfaces (the soft gradient backdrop) — */
+  --field-mint: #C8EAD6;
+  --field-sky: #BEDDF0;
+  --field-lavender: #D4CCEA;
+  --field-pink: #EFD3DD;
+  --field-cream: #F5F4F0;
+
+  /* — Card & UI surfaces — */
+  --canvas: #F5F5F8;        /* main card / panel surface */
+  --canvas-soft: #ECECEF;   /* subtle elevated zones */
+  --canvas-deep: #E2E2E8;   /* footers / depressed zones */
+
+  /* — Type colors — */
+  --ink: #14152B;           /* primary text */
+  --ink-soft: #4A4D6B;      /* secondary text */
+  --ink-mute: #9091A6;      /* tertiary / captions */
+
+  /* — Saturated accent stops (used in liquid shapes, gradients, accent bars) — */
+  --spring: #5FE99A;        /* mint saturated */
+  --azure: #5FA9F0;         /* sky saturated */
+  --pink-hot: #FF5A9E;      /* pink saturated */
+  --amethyst: #9F86E0;      /* lavender saturated */
+
+  /* — Saudi cultural marker (replaces gold) — */
+  --magenta: #C73D7E;       /* used once per page as accent band */
+
+  /* — Spacing (8px scale) — */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-24: 96px;
+  --space-32: 128px;
+
+  /* — Motion — */
+  --dur-micro: 80ms;
+  --dur-short: 200ms;
+  --dur-medium: 400ms;
+  --dur-long: 800ms;
+  --ease-out: cubic-bezier(.22, 1, .36, 1);
+  --ease-in: cubic-bezier(.4, 0, 1, 1);
+  --ease-inout: cubic-bezier(.65, 0, .35, 1);
+  --ease-bounce: cubic-bezier(.34, 1.56, .64, 1);
+
+  /* — Liquid gradients (signature visual element) — */
+  --gradient-field: linear-gradient(135deg, #C8EAD6 0%, #BEDDF0 30%, #D4CCEA 60%, #EFD3DD 100%);
+  --gradient-field-soft: linear-gradient(135deg, #DCF0E5 0%, #D4E7F4 30%, #E4DEEF 60%, #F4DEE5 100%);
+  --gradient-liquid: linear-gradient(135deg, #5FE99A 0%, #5FA9F0 50%, #FF5A9E 100%);
+  --gradient-liquid-soft: linear-gradient(135deg, #A8E5C5 0%, #B5D5EE 50%, #EFD3DD 100%);
+  --gradient-magenta: linear-gradient(90deg, #C73D7E 0%, #DD5DA0 100%);
+
+  /* — Soft shadows (depth in pastel system) — */
+  --shadow-soft: 0 4px 12px rgba(20, 21, 43, 0.06);
+  --shadow-medium: 0 12px 28px rgba(20, 21, 43, 0.10);
+  --shadow-strong: 0 24px 56px rgba(20, 21, 43, 0.16);
+  --shadow-mint: 0 12px 32px rgba(95, 233, 154, 0.25);
+  --shadow-azure: 0 12px 32px rgba(95, 169, 240, 0.25);
+  --shadow-pink: 0 12px 32px rgba(255, 90, 158, 0.25);
+
+  /* — Borders — */
+  --border-soft: rgba(20, 21, 43, 0.06);
+  --border-medium: rgba(20, 21, 43, 0.12);
+  --border-magenta: rgba(199, 61, 126, 0.35);
+
+  /* — Radius — */
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --radius-xl: 32px;
+  --radius-pill: 999px;
+
+  /* — Type families (slim+bold trendy stack) — */
+  --font-ar: 'Cairo', sans-serif;
+  --font-display: 'Bricolage Grotesque', system-ui, sans-serif;
+  --font-body: 'Manrope', system-ui, sans-serif;
+  --font-editorial: 'Fraunces', Georgia, serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+}
+
+/* — Dark mode (inverted; ink-deep with pastel accents) — */
+html[data-theme="dark"] {
+  --field-mint: #1A2A22;
+  --field-sky: #1A2532;
+  --field-lavender: #221F33;
+  --field-pink: #2C1E26;
+  --field-cream: #18181D;
+  --canvas: #1C1D24;
+  --canvas-soft: #16171E;
+  --canvas-deep: #0F1015;
+  --ink: #F5F5F8;
+  --ink-soft: #B8BAC8;
+  --ink-mute: #71748A;
+  --border-soft: rgba(245, 245, 248, 0.06);
+  --border-medium: rgba(245, 245, 248, 0.12);
+  --shadow-soft: 0 4px 12px rgba(0, 0, 0, 0.35);
+  --shadow-medium: 0 12px 28px rgba(0, 0, 0, 0.45);
+  --shadow-strong: 0 24px 56px rgba(0, 0, 0, 0.55);
+  --gradient-field: linear-gradient(135deg, #1A2A22 0%, #1A2532 30%, #221F33 60%, #2C1E26 100%);
+}
+
+/* — Print (CMYK-safe — flat fallbacks for stationery + invoices) — */
+@media print {
+  :root {
+    --gradient-field: #F5F5F8;
+    --gradient-liquid: #5FA9F0;
+    --gradient-magenta: #C73D7E;
+    --canvas: #FFFFFF;
+    --canvas-soft: #FFFFFF;
+    --ink: #14152B;
+    --shadow-soft: none;
+    --shadow-medium: none;
+    --shadow-strong: none;
+  }
+}
+
+/* — Reduced motion — */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

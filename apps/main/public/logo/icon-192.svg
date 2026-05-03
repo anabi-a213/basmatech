@@ -1,0 +1,45 @@
+<!-- Basma Tech PWA Icon 192x192 — Liquid Pastel system (2026-05) — mark + small wordmark -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192" width="192" height="192">
+  <defs>
+    <linearGradient id="liquid-mint" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#A8E5C5"/>
+      <stop offset="100%" stop-color="#5FE99A"/>
+    </linearGradient>
+    <linearGradient id="liquid-azure" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#B5D5EE"/>
+      <stop offset="100%" stop-color="#5FA9F0"/>
+    </linearGradient>
+    <linearGradient id="liquid-pink" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#EFD3DD"/>
+      <stop offset="100%" stop-color="#FF5A9E"/>
+    </linearGradient>
+    <linearGradient id="field-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#C8EAD6"/>
+      <stop offset="33%" stop-color="#BEDDF0"/>
+      <stop offset="66%" stop-color="#D4CCEA"/>
+      <stop offset="100%" stop-color="#EFD3DD"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Field gradient rounded square -->
+  <rect width="192" height="192" rx="28" ry="28" fill="url(#field-bg)"/>
+
+  <!-- Stacked-layer mark, centered upper half -->
+  <g transform="translate(96, 80) scale(1.2)">
+    <path d="M -55 -8 Q -42 -28, -10 -32 Q 22 -32, 50 -12 Q 38 -22, 8 -24 Q -22 -24, -48 -8 Z"
+          fill="url(#liquid-mint)" opacity="0.92" transform="translate(0,-26)"/>
+    <path d="M -55 -8 Q -42 -28, -10 -32 Q 22 -32, 50 -12 Q 38 -22, 8 -24 Q -22 -24, -48 -8 Z"
+          fill="url(#liquid-azure)" opacity="0.92"/>
+    <path d="M -55 -8 Q -42 -28, -10 -32 Q 22 -32, 50 -12 Q 38 -22, 8 -24 Q -22 -24, -48 -8 Z"
+          fill="url(#liquid-pink)" opacity="0.92" transform="translate(0,26)"/>
+  </g>
+
+  <!-- Small wordmark below -->
+  <text x="96" y="170"
+        font-family="Bricolage Grotesque, system-ui, sans-serif"
+        font-weight="800"
+        font-size="20"
+        letter-spacing="-0.5"
+        fill="#14152B"
+        text-anchor="middle">Basma Tech</text>
+</svg>
