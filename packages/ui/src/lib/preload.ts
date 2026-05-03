@@ -23,8 +23,10 @@ const MAX_ENTRIES = 200;
 
 export function frameUrl(phase: Phase, isMobile: boolean, frameIndex: number): string {
   const folder = isMobile ? phase.mobileFolder : phase.folder;
-  const idx = String(frameIndex).padStart(3, '0');
-  return `${folder}/${idx}.webp`;
+  // Existing assets are named frame-001.webp through frame-121.webp (1-indexed,
+  // 3 digits). frameIndex is 0-indexed internally so add 1 here.
+  const idx = String(frameIndex + 1).padStart(3, '0');
+  return `${folder}/frame-${idx}.webp`;
 }
 
 export function getCachedFrame(url: string): Decoded | undefined {

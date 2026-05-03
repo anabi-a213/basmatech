@@ -57,14 +57,29 @@ function makeHomePhases(): Phase[] {
   ];
   const cursorReactive = [false, false, false, true, false, false, false, false];
 
+  // Existing chapter frames live at /frames/chapter-NN/. Map phases 02..05
+  // to those folders. Phases 01, 06, 07, 08 don't have frame sequences;
+  // they render as text overlays on a tinted gradient.
+  const folderByIndex: (string | null)[] = [
+    null,             // 01 Threshold — IgniteOverlay-style splash, no frames
+    '/frames/chapter-02',
+    '/frames/chapter-03',
+    '/frames/chapter-04',
+    '/frames/chapter-05',
+    null,             // 06 Capabilities — rotating SVG hex, no frames
+    null,             // 07 Proof — sticky case scenes, no frames
+    null,             // 08 Invitation — closing pastel, no frames
+  ];
+
   return labels.map((label, i) => {
     const idx = String(i + 1).padStart(2, '0');
     const phaseId = `home-c${i + 1}-${label.toLowerCase()}`;
+    const f = folderByIndex[i] ?? `/assets/projects/${phaseId}/walk`;
     return {
       phaseId,
       label: `Chapter ${idx} — ${label}`,
-      folder: `/assets/projects/${phaseId}/walk`,
-      mobileFolder: `/assets/projects/${phaseId}/walk-mobile`,
+      folder: f,
+      mobileFolder: f, // share same frames on mobile until walk-mobile/ exists
       startFrame: 0,
       endFrame: 120,
       scrollStart: 0,

@@ -59,12 +59,17 @@ function makePortfolioPhases(): Phase[] {
     ease: 'power2.inOut',
   };
 
-  const projects: Phase[] = PROJECTS.map((p) => ({
+  // Existing portfolio walk frames live at /frames/walk-NN/. Map projects
+  // 01..09 to those folders. Foyer + closing render as text overlays.
+  const projects: Phase[] = PROJECTS.map((p, i) => {
+    const num = String(i + 1).padStart(2, '0');
+    const folder = `/frames/walk-${num}`;
+    return {
     phaseId: p.phaseId,
     label: p.label,
     category: p.category,
-    folder: `/assets/projects/${p.phaseId}/walk`,
-    mobileFolder: `/assets/projects/${p.phaseId}/walk-mobile`,
+    folder,
+    mobileFolder: folder,
     startFrame: 0,
     endFrame: 120,
     scrollStart: 0,
@@ -74,7 +79,8 @@ function makePortfolioPhases(): Phase[] {
     blendOut: 'wash',
     tint: p.tint,
     ease: 'power2.inOut',
-  }));
+  } as Phase;
+  });
 
   const closing: Phase = {
     phaseId: 'tour-closing',
