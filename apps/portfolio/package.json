@@ -4,9 +4,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "predev": "node scripts/copy-assets.mjs",
+    "predev": "node scripts/copy-assets.mjs && node scripts/copy-phase2-assets.mjs",
     "dev": "next dev -p 3001",
-    "prebuild": "node scripts/copy-assets.mjs",
+    "prebuild": "node scripts/copy-assets.mjs && node scripts/copy-phase2-assets.mjs",
     "build": "next build",
     "start": "next start -p 3001",
     "lint": "next lint",
