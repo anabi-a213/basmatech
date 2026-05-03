@@ -32,7 +32,7 @@ export function Pathfinder({ phases, phaseHeightsVh }: PathfinderProps) {
       let acc = 0;
       for (const h of phaseHeightsVh) {
         cumTops.push(acc);
-        acc += h * vh;
+        acc += (h / 100) * vh;
       }
       const total = acc;
       const y = window.scrollY;
@@ -59,7 +59,7 @@ export function Pathfinder({ phases, phaseHeightsVh }: PathfinderProps) {
   function jumpTo(index: number) {
     const vh = window.innerHeight;
     let y = 0;
-    for (let i = 0; i < index; i++) y += phaseHeightsVh[i] * vh;
+    for (let i = 0; i < index; i++) y += (phaseHeightsVh[i] / 100) * vh;
     window.scrollTo({ top: y, behavior: 'smooth' });
   }
 

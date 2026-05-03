@@ -81,12 +81,14 @@ export function TourCanvas({
 
     gsap.registerPlugin(ScrollTrigger);
     const vh = window.innerHeight;
-    // Cumulative tops in CSS px.
+    // Cumulative tops in CSS px. phaseHeights values are in vh units where
+    // 100 = "100vh = 1 viewport", matching CSS. So divide by 100 to convert
+    // the vh-percentage value into a multiplier of the viewport height in px.
     const cumTops: number[] = [];
     let acc = 0;
     for (const h of phaseHeights) {
       cumTops.push(acc);
-      acc += h * vh;
+      acc += (h / 100) * vh;
     }
     const totalPx = acc;
 
@@ -105,9 +107,10 @@ export function TourCanvas({
         if (i !== activePhaseIndex) setActivePhaseIndex(i);
         const phase = spec.phases[i];
         const phaseStart = cumTops[i];
-        const phaseHeight = phaseHeights[i] * vh;
-        // Frame scrub finishes after 200vh of the 400vh phase, leaving 100vh dwell + 100vh release.
-        const scrubBudget = Math.min(phaseHeight, 200 * vh);
+        const phaseHeight = (phaseHeights[i] / 100) * vh;
+        // Frame scrub finishes after 200vh = 2 viewport heights of the 400vh
+        // (= 4 viewport heights) phase, leaving 100vh dwell + 100vh release.
+        const scrubBudget = Math.min(phaseHeight, 2 * vh);
         const inPhase = Math.max(0, Math.min(scrubBudget, scrollPx - phaseStart));
         const rawT = scrubBudget > 0 ? inPhase / scrubBudget : 0;
         const t = applyEase(phase.ease, rawT);

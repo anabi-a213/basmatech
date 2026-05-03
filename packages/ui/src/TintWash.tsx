@@ -43,7 +43,7 @@ export function TintWash({ phases, phaseHeightsVh, intensity = 0.45 }: TintWashP
     let acc = 0;
     for (const h of phaseHeightsVh) {
       cumTops.push(acc);
-      acc += h * vh;
+      acc += (h / 100) * vh;
     }
     const totalPx = acc;
 
