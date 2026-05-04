@@ -110,7 +110,7 @@ export default async function Home({
             lineHeight: 1.1,
             margin: '0 0 16px',
             maxWidth: '20ch',
-            textShadow: '0 4px 32px rgba(0,0,0,0.5)',
+            textShadow: '0 2px 8px rgba(0,0,0,0.55), 0 8px 32px rgba(0,0,0,0.45), 0 0 2px rgba(0,0,0,0.8)',
           }}>{c.headline}</h2>
           <p style={{ fontSize: 'clamp(15px, 1.4vw, 19px)', color: 'rgba(245,245,248,0.85)', maxWidth: '52ch', marginBottom: 12 }}>
             {c.subhead}
@@ -119,6 +119,55 @@ export default async function Home({
             <p style={{ fontSize: 'clamp(13px, 1.2vw, 16px)', color: 'rgba(245,245,248,0.7)', maxWidth: '50ch' }}>
               {c.body}
             </p>
+          )}
+          {/* CTA buttons render only on c8 (Invitation). The threshold
+              chapter also has a cta string in copy but it's used inline,
+              not as a button. */}
+          {phase === 'home-c8-invitation' && 'cta' in c && c.cta && (
+            <div style={{
+              display: 'flex',
+              gap: 16,
+              flexWrap: 'wrap',
+              justifyContent: 'center',
+              marginTop: 32,
+              pointerEvents: 'auto',
+            }}>
+              <a
+                href="https://basmatech-portfolio.vercel.app/ar"
+                style={{
+                  padding: '16px 32px',
+                  borderRadius: 999,
+                  background: '#FF5A9E',
+                  color: '#fff',
+                  fontFamily: 'monospace',
+                  fontSize: 13,
+                  letterSpacing: '0.14em',
+                  textTransform: 'uppercase',
+                  textDecoration: 'none',
+                  boxShadow: '0 8px 32px rgba(255,90,158,0.5)',
+                }}
+              >
+                {c.cta}
+              </a>
+              {'ctaSecondary' in c && c.ctaSecondary && (
+                <a
+                  href="mailto:hello@basmatech.sa"
+                  style={{
+                    padding: '16px 28px',
+                    borderRadius: 999,
+                    border: '1px solid rgba(20,20,30,0.4)',
+                    color: 'rgba(20,20,30,0.92)',
+                    fontFamily: 'monospace',
+                    fontSize: 13,
+                    letterSpacing: '0.14em',
+                    textTransform: 'uppercase',
+                    textDecoration: 'none',
+                  }}
+                >
+                  {c.ctaSecondary}
+                </a>
+              )}
+            </div>
           )}
         </PhaseOverlay>
       ))}

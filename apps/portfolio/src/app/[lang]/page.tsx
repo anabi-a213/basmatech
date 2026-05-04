@@ -85,7 +85,7 @@ export default async function PortfolioTour({
             lineHeight: 1.1,
             margin: '0 0 16px',
             maxWidth: '20ch',
-            textShadow: '0 4px 32px rgba(0,0,0,0.5)',
+            textShadow: '0 2px 8px rgba(0,0,0,0.55), 0 8px 32px rgba(0,0,0,0.45), 0 0 2px rgba(0,0,0,0.8)',
           }}
         >
           {copy.foyer.headline}
@@ -132,7 +132,7 @@ export default async function PortfolioTour({
                 lineHeight: 1.1,
                 margin: '0 0 12px',
                 maxWidth: '20ch',
-                textShadow: '0 4px 32px rgba(0,0,0,0.5)',
+                textShadow: '0 2px 8px rgba(0,0,0,0.55), 0 8px 32px rgba(0,0,0,0.45), 0 0 2px rgba(0,0,0,0.8)',
               }}
             >
               {project.title}
