@@ -45,6 +45,10 @@ export function LenisProvider() {
       gsapMod.default.ticker.add(tickerCb);
       gsapMod.default.ticker.lagSmoothing(0);
 
+      // Expose for Pathfinder dot click — see portfolio LenisProvider for rationale.
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (window as any).__lenis = lenis;
+
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (lenis as any).__tickerCb = tickerCb;
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -58,6 +62,8 @@ export function LenisProvider() {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const gsap = (lenis as any)?.__gsap;
       if (cb && gsap) gsap.ticker.remove(cb);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      if ((window as any).__lenis === lenis) delete (window as any).__lenis;
       lenis?.destroy();
     };
   }, []);

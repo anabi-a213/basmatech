@@ -51,6 +51,12 @@ export function LenisProvider() {
       gsapMod.default.ticker.add(tickerCb);
       gsapMod.default.ticker.lagSmoothing(0);
 
+      // Expose for in-page deep-link code (Pathfinder dot click). window.scrollTo
+      // doesn't work when Lenis owns the scroll position — it gets overridden
+      // by the next ticker frame.
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (window as any).__lenis = lenis;
+
       // Stash for cleanup
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (lenis as any).__tickerCb = tickerCb;
@@ -65,6 +71,8 @@ export function LenisProvider() {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const gsap = (lenis as any)?.__gsap;
       if (cb && gsap) gsap.ticker.remove(cb);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      if ((window as any).__lenis === lenis) delete (window as any).__lenis;
       lenis?.destroy();
     };
   }, []);

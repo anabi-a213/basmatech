@@ -60,7 +60,18 @@ export function Pathfinder({ phases, phaseHeightsVh }: PathfinderProps) {
     const vh = window.innerHeight;
     let y = 0;
     for (let i = 0; i < index; i++) y += (phaseHeightsVh[i] / 100) * vh;
-    window.scrollTo({ top: y, behavior: 'smooth' });
+    // When Lenis owns the scroll position (it does on desktop), window.scrollTo
+    // gets immediately overridden by Lenis's lerp loop on the next ticker frame.
+    // LenisProvider exposes the live instance on window.__lenis for exactly this
+    // case. Fall back to native scroll on touch / iOS / reduced-motion paths
+    // where Lenis isn't running.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const lenis = (window as any).__lenis;
+    if (lenis && typeof lenis.scrollTo === 'function') {
+      lenis.scrollTo(y, { duration: 1.4 });
+    } else {
+      window.scrollTo({ top: y, behavior: 'smooth' });
+    }
   }
 
   return (
