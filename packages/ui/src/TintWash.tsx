@@ -47,9 +47,14 @@ export function TintWash({ phases, phaseHeightsVh, intensity = 0.45 }: TintWashP
     }
     const totalPx = acc;
 
+    // Bind to the same trigger element TourCanvas uses so the two stay in
+    // perfect sync (otherwise off by Header height — phase boundaries land
+    // ~64px apart and you see the wrong tint at the wrong scroll).
+    const trigger = document.querySelector<HTMLElement>('[data-tour-spacer]');
     const st = ScrollTrigger.create({
-      start: 0,
-      end: totalPx,
+      trigger: trigger ?? undefined,
+      start: trigger ? 'top top' : 0,
+      end: trigger ? `+=${totalPx}` : totalPx,
       scrub: true,
       invalidateOnRefresh: true,
       onUpdate: (self) => {

@@ -233,6 +233,7 @@ export function TourCanvas({
           canvas using its own logic. */}
       <div
         ref={wrapRef}
+        data-tour-spacer
         style={{
           height: `${phaseHeights.reduce((a, b) => a + b, 0)}vh`,
           position: 'relative',

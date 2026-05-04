@@ -28,6 +28,12 @@ export function Pathfinder({ phases, phaseHeightsVh }: PathfinderProps) {
     const target = el;
     function update() {
       const vh = window.innerHeight;
+      // The TourCanvas spacer (data-tour-spacer) sits below the Header. Its
+      // offsetTop in the document is where phase 0 actually starts. cumTops
+      // are relative to that (NOT to documentScrollY=0) so that they line up
+      // with the same reference TourCanvas's ScrollTrigger uses.
+      const spacer = document.querySelector<HTMLElement>('[data-tour-spacer]');
+      const offset = spacer ? spacer.offsetTop : 0;
       const cumTops: number[] = [];
       let acc = 0;
       for (const h of phaseHeightsVh) {
@@ -35,7 +41,7 @@ export function Pathfinder({ phases, phaseHeightsVh }: PathfinderProps) {
         acc += (h / 100) * vh;
       }
       const total = acc;
-      const y = window.scrollY;
+      const y = window.scrollY - offset;
       let active = 0;
       for (let k = 0; k < cumTops.length; k++) if (y >= cumTops[k]) active = k;
       const dots = target.querySelectorAll<HTMLButtonElement>('button[data-phase]');
@@ -44,7 +50,7 @@ export function Pathfinder({ phases, phaseHeightsVh }: PathfinderProps) {
       });
       // Progress bar
       const bar = target.querySelector<HTMLDivElement>('[data-progress]');
-      if (bar) bar.style.transform = `scaleX(${Math.min(1, y / total)})`;
+      if (bar && total > 0) bar.style.transform = `scaleX(${Math.min(1, Math.max(0, y / total))})`;
     }
 
     update();
@@ -58,8 +64,14 @@ export function Pathfinder({ phases, phaseHeightsVh }: PathfinderProps) {
 
   function jumpTo(index: number) {
     const vh = window.innerHeight;
-    let y = 0;
-    for (let i = 0; i < index; i++) y += (phaseHeightsVh[i] / 100) * vh;
+    let phaseStart = 0;
+    for (let i = 0; i < index; i++) phaseStart += (phaseHeightsVh[i] / 100) * vh;
+    // The spacer sits below the page header; document scroll is the spacer's
+    // offsetTop plus the in-spacer offset. Without this, jumping to "phase N"
+    // lands ~headerHeight px short and TourCanvas computes the previous phase.
+    const spacer = document.querySelector<HTMLElement>('[data-tour-spacer]');
+    const offset = spacer ? spacer.offsetTop : 0;
+    const y = phaseStart + offset;
     // When Lenis owns the scroll position (it does on desktop), window.scrollTo
     // gets immediately overridden by Lenis's lerp loop on the next ticker frame.
     // LenisProvider exposes the live instance on window.__lenis for exactly this
