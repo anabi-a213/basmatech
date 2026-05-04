@@ -69,8 +69,10 @@ function makeHomePhases(): Phase[] {
       phaseId,
       label: `Chapter ${idx} — ${label}`,
       folder: `/assets/projects/${phaseId}/walk`,
-      // Until Phase 5 derives 60-frame walk-mobile/, mobile shares desktop.
-      mobileFolder: `/assets/projects/${phaseId}/walk`,
+      // walk-mobile is 60 frames × 1280×720 q85 (~4MB) vs walk's 121 × 1920
+      // (~18MB). Critical on cellular. Splash chapters c1/c6/c7/c8 don't
+      // have walks at all — TourCanvas's isSplashPhase check skips preload.
+      mobileFolder: `/assets/projects/${phaseId}/walk-mobile`,
       startFrame: 0,
       endFrame: 120,
       scrollStart: 0,

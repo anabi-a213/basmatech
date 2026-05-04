@@ -59,15 +59,16 @@ function makePortfolioPhases(): Phase[] {
     ease: 'power2.inOut',
   };
 
-  // Phase 2 generates fresh walk frames into /assets/projects/{phaseId}/walk
-  // and walk-mobile/ for each of the 9 projects.
+  // Walk frames generated into /assets/projects/{phaseId}/walk (121 × 1920)
+  // and /assets/projects/{phaseId}/walk-mobile (60 × 1280, q85) — see
+  // pipeline/scripts/buildMobile.mjs. Mobile takes ~4MB per phase vs ~18MB
+  // for desktop, decisive on cellular.
   const projects: Phase[] = PROJECTS.map((p) => ({
     phaseId: p.phaseId,
     label: p.label,
     category: p.category,
     folder: `/assets/projects/${p.phaseId}/walk`,
-    // Until Phase 5 derives 60-frame walk-mobile/, mobile shares desktop.
-    mobileFolder: `/assets/projects/${p.phaseId}/walk`,
+    mobileFolder: `/assets/projects/${p.phaseId}/walk-mobile`,
     startFrame: 0,
     endFrame: 120,
     scrollStart: 0,

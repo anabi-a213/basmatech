@@ -63,12 +63,14 @@ export function PhaseOverlay({
       const viewportCenterPx = window.scrollY + vh / 2;
       const distanceFromCenter = Math.abs(viewportCenterPx - overlayCenterPx);
 
-      // Fade window: start fading in 1.0 viewport before center, fully
-      // visible at center, start fading out 1.0 viewport after center.
-      // Full fade-out at 1.5 viewports — the overlay clears the screen
-      // cleanly before the next phase's overlay starts coming in.
-      const FADE_PEAK = vh * 0.4;   // distance where opacity is still 1.0
-      const FADE_END = vh * 1.1;    // distance beyond which opacity is 0
+      // Fade window. Plateau of 0.6vh (centered on the overlay) where text
+      // is fully opaque, then linear fade out to 0 at 1.4vh from center.
+      // Tuned so adjacent phase overlays overlap continuously: with 250vh
+      // walk phases (centers 2.5vh apart) and FADE_END=1.4vh, p_n's fade-out
+      // tail at +1.4vh meets p_{n+1}'s fade-in tail at -1.4vh, giving 0.3vh
+      // of double-visibility instead of a dead zone where neither shows.
+      const FADE_PEAK = vh * 0.6;   // distance where opacity is still 1.0
+      const FADE_END = vh * 1.4;    // distance beyond which opacity is 0
 
       let op: number;
       if (distanceFromCenter <= FADE_PEAK) op = 1;

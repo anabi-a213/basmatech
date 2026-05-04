@@ -50,7 +50,8 @@ export function TintWash({ phases, phaseHeightsVh, intensity = 0.45 }: TintWashP
     const st = ScrollTrigger.create({
       start: 0,
       end: totalPx,
-      scrub: 0.2,
+      scrub: true,
+      invalidateOnRefresh: true,
       onUpdate: (self) => {
         const scrollPx = self.progress * totalPx;
         // Find current phase
@@ -59,8 +60,11 @@ export function TintWash({ phases, phaseHeightsVh, intensity = 0.45 }: TintWashP
           if (scrollPx >= cumTops[k]) i = k;
         }
         const phaseStart = cumTops[i];
-        const phaseLen = phaseHeightsVh[i] * vh;
-        const inPhase = (scrollPx - phaseStart) / phaseLen; // 0..1
+        // BUG FIX: vh-percentage units need /100 to get px. Without this, inPhase
+        // came out 100x smaller than expected and the `inPhase > 0.8` window
+        // was essentially never true — TintWash was silently a no-op.
+        const phaseLen = (phaseHeightsVh[i] / 100) * vh;
+        const inPhase = phaseLen > 0 ? (scrollPx - phaseStart) / phaseLen : 0; // 0..1
         const next = phases[i + 1];
 
         // Default: hide
