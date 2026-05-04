@@ -12,6 +12,9 @@ export type { TintWashProps } from './TintWash';
 export { Pathfinder } from './Pathfinder';
 export type { PathfinderProps } from './Pathfinder';
 
+export { PhaseOverlay } from './PhaseOverlay';
+export type { PhaseOverlayProps } from './PhaseOverlay';
+
 export { applyEase, power2InOut, noEase } from './lib/easing';
 export type { EaseName } from './lib/easing';
 

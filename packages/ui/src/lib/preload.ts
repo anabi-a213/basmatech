@@ -19,7 +19,9 @@ type Decoded = ImageBitmap | HTMLImageElement;
 
 const cache = new Map<string, Decoded>();
 const inflight = new Map<string, Promise<Decoded>>();
-const MAX_ENTRIES = 200;
+// Hold ~3 phases worth of frames (3 × 121 = 363) — enough for active phase
+// + 1 ahead + 1 behind without thrashing on back-scroll.
+const MAX_ENTRIES = 400;
 
 export function frameUrl(phase: Phase, isMobile: boolean, frameIndex: number): string {
   const folder = isMobile ? phase.mobileFolder : phase.folder;
@@ -63,18 +65,26 @@ function evictIfOverCap(): void {
   }
 }
 
-/** Pre-warm the window around currentFrame in the active phase. */
+/**
+ * Preload the ENTIRE active phase up front, not a sliding window.
+ *
+ * Apple AirPods Pro / Mac Pro pages — and the canonical scrolly-canvas
+ * patterns documented at css-tricks.com — preload every frame for a phase
+ * before scrubbing through it. Sliding-window decode-on-demand causes
+ * visible stutter when the user's scroll velocity exceeds the decode
+ * throughput on first pass through new frames. With ~120 webp × ~50KB =
+ * ~6 MB per phase, full preload is acceptable on desktop and fits well
+ * within MAX_ENTRIES. The currentFrame argument is kept for API
+ * compatibility but no longer narrows the range — we always decode 0..max.
+ */
 export async function preloadWindow(
   phase: Phase,
   isMobile: boolean,
-  currentFrame: number,
-  radius = 12,
+  _currentFrame: number,
 ): Promise<void> {
   const max = isMobile ? 59 : 120;
-  const start = Math.max(0, currentFrame - radius);
-  const end = Math.min(max, currentFrame + radius);
   const tasks: Promise<unknown>[] = [];
-  for (let i = start; i <= end; i++) {
+  for (let i = 0; i <= max; i++) {
     const url = frameUrl(phase, isMobile, i);
     if (!cache.has(url) && !inflight.has(url)) {
       tasks.push(fetchAndCache(url).catch(() => undefined));
@@ -83,14 +93,18 @@ export async function preloadWindow(
   await Promise.allSettled(tasks);
 }
 
-/** Pre-decode the next phase's first frames so the handoff is seamless. */
+/**
+ * Pre-decode the next phase entirely so the handoff is seamless. Called
+ * once when the active phase's progress crosses 0.7 — gives 30vh of scroll
+ * to fully load before the user actually arrives at the next phase.
+ */
 export async function preloadNextPhase(
   nextPhase: Phase,
   isMobile: boolean,
-  count = 30,
 ): Promise<void> {
+  const max = isMobile ? 59 : 120;
   const tasks: Promise<unknown>[] = [];
-  for (let i = 0; i < count; i++) {
+  for (let i = 0; i <= max; i++) {
     const url = frameUrl(nextPhase, isMobile, i);
     if (!cache.has(url) && !inflight.has(url)) {
       tasks.push(fetchAndCache(url).catch(() => undefined));

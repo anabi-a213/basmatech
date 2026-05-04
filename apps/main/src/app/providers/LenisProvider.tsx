@@ -5,57 +5,59 @@ import { shouldUseLenis } from '@basmatech/ui';
 
 /**
  * Mounts Lenis smooth scroll only when device is non-touch, non-iOS,
- * and reduced-motion is OFF. Otherwise relies on native scroll +
- * ScrollTrigger.normalizeScroll(true).
- *
- * iOS Safari rubber-band fights Lenis's scroll proxy and produces visible
- * jitter on pinned phases. Skip Lenis there. Same for any touch-primary
- * device.
+ * and reduced-motion is OFF. Otherwise falls back to native scroll
+ * (no normalizeScroll — see comment below).
  */
 export function LenisProvider() {
   useEffect(() => {
-    // Use any for the Lenis instance to avoid leaking the lib's specific
-    // event-channel typing into this provider; we only need destroy/raf/on.
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let lenis: any = null;
-    let rafId = 0;
-    let cancelled = false;
 
     async function start() {
-      if (!shouldUseLenis()) {
-        // Native scroll path. Normalize ScrollTrigger so it stays in sync.
-        const gsapMod = await import('gsap');
-        const stMod = await import('gsap/ScrollTrigger');
-        gsapMod.default.registerPlugin(stMod.ScrollTrigger);
-        stMod.ScrollTrigger.normalizeScroll(true);
-        return;
-      }
-      const Lenis = (await import('lenis')).default;
       const gsapMod = await import('gsap');
       const stMod = await import('gsap/ScrollTrigger');
       gsapMod.default.registerPlugin(stMod.ScrollTrigger);
 
+      // normalizeScroll(true) on iOS is documented as net-negative on GSAP forums
+      // (kills momentum at page bottom on iOS Safari, jumps to top on iOS 16,
+      // breaks page on older iPhones). Skip Lenis on touch AND skip normalize —
+      // accept slightly different feel on iOS in exchange for not breaking it.
+      if (!shouldUseLenis()) return;
+
+      const Lenis = (await import('lenis')).default;
+
+      // Canonical Lenis + GSAP integration (per Lenis README + GSAP forum
+      // threads #38517 #40426). autoRaf:false hands the RAF loop entirely to
+      // gsap.ticker so we don't have two RAF callbacks racing each other —
+      // a separate Lenis raf + GSAP's internal ticker produces broken scrub
+      // and ScrollTriggers firing at slightly-wrong scroll positions.
+      // lagSmoothing(0) disables GSAP's lag compensation which fights Lenis's
+      // own lerp, compounding delay.
       lenis = new Lenis({
-        duration: 1.6,
-        easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        autoRaf: false,
+        lerp: 0.1,
         smoothWheel: true,
         wheelMultiplier: 1,
         touchMultiplier: 1.4,
       });
-      function raf(time: number) {
-        if (cancelled) return;
-        lenis?.raf(time);
-        rafId = requestAnimationFrame(raf);
-      }
-      rafId = requestAnimationFrame(raf);
       lenis.on('scroll', () => stMod.ScrollTrigger.update());
+      const tickerCb = (time: number) => { lenis?.raf(time * 1000); };
+      gsapMod.default.ticker.add(tickerCb);
       gsapMod.default.ticker.lagSmoothing(0);
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (lenis as any).__tickerCb = tickerCb;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (lenis as any).__gsap = gsapMod.default;
     }
 
     void start();
     return () => {
-      cancelled = true;
-      cancelAnimationFrame(rafId);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const cb = (lenis as any)?.__tickerCb;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const gsap = (lenis as any)?.__gsap;
+      if (cb && gsap) gsap.ticker.remove(cb);
       lenis?.destroy();
     };
   }, []);

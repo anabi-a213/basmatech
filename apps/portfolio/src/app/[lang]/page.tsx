@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 import { portfolioSpec, getPortfolioCopy } from '@basmatech/content';
-import { TourCanvas, TintWash, Pathfinder } from '@basmatech/ui';
+import { TourCanvas, TintWash, Pathfinder, PhaseOverlay } from '@basmatech/ui';
 import { LenisProvider } from '@/app/providers/LenisProvider';
 import { Header, Footer, MagentaBand } from '@basmatech/design-system';
 
@@ -21,14 +21,17 @@ export default async function PortfolioTour({
   const copy = getPortfolioCopy(lang);
   const dir = lang === 'ar' ? 'rtl' : 'ltr';
 
-  // Per-phase scroll budgets. Foyer + closing are 100vh splash sections,
-  // each project walk is 400vh = 200vh frame scrub + 100vh end-frame dwell + 100vh release.
+  // Per-phase scroll budgets. Foyer + closing are 100vh splash sections.
+  // Each project walk is 250vh = 200vh full-canvas scrub + 50vh static dwell.
+  // Was 400vh; the extra 150vh of dead dwell produced the "scrolls forever
+  // with nothing changing" feel that NN/G's scrollytelling research flags
+  // as a primary cause of users perceiving the page as broken.
   const phaseHeightsVh: Record<string, number> = {
     'tour-foyer': 100,
     'tour-closing': 100,
   };
   const phaseHeightsArr = portfolioSpec.phases.map(
-    (p: { phaseId: string }) => phaseHeightsVh[p.phaseId] ?? 400,
+    (p: { phaseId: string }) => phaseHeightsVh[p.phaseId] ?? 250,
   );
 
   const otherLang = lang === 'ar' ? 'en' : 'ar';
@@ -54,23 +57,18 @@ export default async function PortfolioTour({
       <TintWash phases={portfolioSpec.phases} phaseHeightsVh={phaseHeightsArr} />
       <Pathfinder phases={portfolioSpec.phases} phaseHeightsVh={phaseHeightsArr} />
 
-      {/* Foyer overlay text (first 100vh) */}
-      <div
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          height: '100vh',
+      {/* Foyer overlay (phase 0 = 100vh splash, content centered) */}
+      <PhaseOverlay
+        phaseTopVh={0}
+        centerOffsetVh={50}
+        contentStyle={{
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'center',
           alignItems: 'center',
           textAlign: 'center',
-          padding: '80px clamp(20px, 5vw, 60px)',
+          padding: 'clamp(60px, 10vh, 120px) clamp(20px, 5vw, 60px)',
           color: '#F5F5F8',
-          zIndex: 10,
-          pointerEvents: 'none',
         }}
       >
         <div style={{ fontFamily: 'monospace', fontSize: 11, letterSpacing: '0.22em', textTransform: 'uppercase', color: 'rgba(245,245,248,0.65)', marginBottom: 16 }}>
@@ -95,28 +93,27 @@ export default async function PortfolioTour({
         <p style={{ fontSize: 'clamp(15px, 1.3vw, 19px)', color: 'rgba(245,245,248,0.85)', maxWidth: '56ch' }}>
           {copy.foyer.subhead}
         </p>
-      </div>
+      </PhaseOverlay>
 
-      {/* Per-project overlays positioned via fixed offsets in the scroll table */}
+      {/* Per-project overlays. Each project phase is 250vh (foyer is the
+          first 100vh, then i*250vh per project). centerOffsetVh: 200 places
+          the headline at the moment the canvas reaches frame 120 — the
+          static "landed" scene under the type. PhaseOverlay handles the
+          opacity crossfade so adjacent projects don't hard-pop. */}
       {copy.projects.map((project, i) => {
-        // Each project section starts at: 100vh (foyer) + i * 400vh
-        const offsetVh = 100 + i * 400 + 200; // mid-dwell
+        const phaseTop = 100 + i * 250;
         return (
-          <div
+          <PhaseOverlay
             key={project.slug}
-            style={{
-              position: 'absolute',
-              top: `calc(${offsetVh}vh - 50vh)`,
-              left: 0,
-              right: 0,
-              height: '100vh',
+            phaseTopVh={phaseTop}
+            centerOffsetVh={200}
+            contentStyle={{
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'flex-end',
               padding: 'clamp(80px, 12vh, 120px) clamp(24px, 6vw, 96px)',
               color: '#F5F5F8',
-              zIndex: 10,
-              pointerEvents: 'none',
+              minHeight: '100vh',
             }}
           >
             <div style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16, marginBottom: 16 }}>
@@ -149,18 +146,17 @@ export default async function PortfolioTour({
             <p style={{ fontSize: 'clamp(15px, 1.5vw, 20px)', lineHeight: 1.5, color: 'rgba(245,245,248,0.95)', maxWidth: '50ch' }}>
               {project.outcome}
             </p>
-          </div>
+          </PhaseOverlay>
         );
       })}
 
-      {/* Closing CTA */}
-      <div
-        style={{
-          position: 'absolute',
-          top: `calc(${100 + 9 * 400}vh)`,
-          left: 0,
-          right: 0,
-          minHeight: '100vh',
+      {/* Closing CTA — uses an explicit pointerEvents on the container so
+          the buttons inside are clickable (PhaseOverlay defaults to
+          pointer-events:none). */}
+      <PhaseOverlay
+        phaseTopVh={100 + 9 * 250}
+        centerOffsetVh={50}
+        contentStyle={{
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'center',
@@ -168,7 +164,7 @@ export default async function PortfolioTour({
           textAlign: 'center',
           padding: 'clamp(80px, 12vh, 160px) clamp(24px, 6vw, 80px)',
           color: '#F5F5F8',
-          zIndex: 10,
+          pointerEvents: 'auto',
         }}
       >
         <div style={{ fontFamily: 'monospace', fontSize: 11, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(245,245,248,0.7)', marginBottom: 24 }}>
@@ -229,7 +225,7 @@ export default async function PortfolioTour({
             {copy.closing.ctaSecondary}
           </a>
         </div>
-      </div>
+      </PhaseOverlay>
 
       <MagentaBand label={copy.closing.bandLabel} />
       <Footer

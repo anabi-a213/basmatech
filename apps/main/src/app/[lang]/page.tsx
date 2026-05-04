@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 import { homeSpec, getHomeCopy } from '@basmatech/content';
-import { TourCanvas, TintWash, Pathfinder } from '@basmatech/ui';
+import { TourCanvas, TintWash, Pathfinder, PhaseOverlay } from '@basmatech/ui';
 import { LenisProvider } from '@/app/providers/LenisProvider';
 import { Header, Footer, MagentaBand } from '@basmatech/design-system';
 
@@ -21,16 +21,18 @@ export default async function Home({
   const dir = lang === 'ar' ? 'rtl' : 'ltr';
 
   // Per-phase scroll budgets in vh-percentage units (100 = 1 viewport).
-  // Threshold + Invitation are 100vh splashes. Chapters 02..05 are 400vh
-  // walks (200vh scrub + 100vh dwell + 100vh release). 06/07 are 200vh.
+  // Threshold + Invitation are 100vh splashes. Chapters 02..05 are 250vh
+  // walks (200vh full-canvas scrub + 50vh static dwell on the last frame).
+  // 06/07 trimmed to 150vh static splashes — they have no Kling walk and
+  // 200vh of pure tint with brief text felt empty.
   const phaseHeightsVh: Record<string, number> = {
     'home-c1-threshold': 100,
-    'home-c2-imprint': 400,
-    'home-c3-workshop': 400,
-    'home-c4-motion': 400,
-    'home-c5-kingdom': 400,
-    'home-c6-capabilities': 200,
-    'home-c7-proof': 200,
+    'home-c2-imprint': 250,
+    'home-c3-workshop': 250,
+    'home-c4-motion': 250,
+    'home-c5-kingdom': 250,
+    'home-c6-capabilities': 150,
+    'home-c7-proof': 150,
     'home-c8-invitation': 100,
   };
   const phaseHeightsArr = homeSpec.phases.map(
@@ -69,25 +71,26 @@ export default async function Home({
       <TintWash phases={homeSpec.phases} phaseHeightsVh={phaseHeightsArr} />
       <Pathfinder phases={homeSpec.phases} phaseHeightsVh={phaseHeightsArr} />
 
-      {/* Overlay text per chapter, mid-dwell positioning */}
+      {/* Overlay text per chapter. Each centerOffsetVh places the headline
+          at the moment the canvas reaches its final frame (200vh into the
+          250vh walk phases) so the type lands with the static scene under
+          it. Splash phases use phase center. PhaseOverlay handles the
+          opacity crossfade between adjacent chapters. */}
       {([
-        { phase: 'home-c1-threshold', mid: 50, c: copy.chapters.threshold },
-        { phase: 'home-c2-imprint', mid: phaseTopVh[1] + 250, c: copy.chapters.imprint },
-        { phase: 'home-c3-workshop', mid: phaseTopVh[2] + 250, c: copy.chapters.workshop },
-        { phase: 'home-c4-motion', mid: phaseTopVh[3] + 250, c: copy.chapters.motion },
-        { phase: 'home-c5-kingdom', mid: phaseTopVh[4] + 250, c: copy.chapters.kingdom },
-        { phase: 'home-c6-capabilities', mid: phaseTopVh[5] + 100, c: copy.chapters.capabilities },
-        { phase: 'home-c7-proof', mid: phaseTopVh[6] + 100, c: copy.chapters.proof },
-        { phase: 'home-c8-invitation', mid: phaseTopVh[7] + 50, c: copy.chapters.invitation },
-      ] as const).map(({ phase, mid, c }) => (
-        <div
+        { phase: 'home-c1-threshold', top: phaseTopVh[0], offset: 50, c: copy.chapters.threshold },
+        { phase: 'home-c2-imprint', top: phaseTopVh[1], offset: 200, c: copy.chapters.imprint },
+        { phase: 'home-c3-workshop', top: phaseTopVh[2], offset: 200, c: copy.chapters.workshop },
+        { phase: 'home-c4-motion', top: phaseTopVh[3], offset: 200, c: copy.chapters.motion },
+        { phase: 'home-c5-kingdom', top: phaseTopVh[4], offset: 200, c: copy.chapters.kingdom },
+        { phase: 'home-c6-capabilities', top: phaseTopVh[5], offset: 75, c: copy.chapters.capabilities },
+        { phase: 'home-c7-proof', top: phaseTopVh[6], offset: 75, c: copy.chapters.proof },
+        { phase: 'home-c8-invitation', top: phaseTopVh[7], offset: 50, c: copy.chapters.invitation },
+      ] as const).map(({ phase, top, offset, c }) => (
+        <PhaseOverlay
           key={phase}
-          style={{
-            position: 'absolute',
-            top: `calc(${mid}vh - 50vh)`,
-            left: 0,
-            right: 0,
-            height: '100vh',
+          phaseTopVh={top}
+          centerOffsetVh={offset}
+          contentStyle={{
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'center',
@@ -95,8 +98,6 @@ export default async function Home({
             textAlign: 'center',
             padding: 'clamp(80px, 12vh, 120px) clamp(24px, 6vw, 96px)',
             color: '#F5F5F8',
-            zIndex: 10,
-            pointerEvents: 'none',
           }}
         >
           <div style={{ fontFamily: 'monospace', fontSize: 11, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(245,245,248,0.6)', marginBottom: 24 }}>
@@ -119,7 +120,7 @@ export default async function Home({
               {c.body}
             </p>
           )}
-        </div>
+        </PhaseOverlay>
       ))}
 
       <MagentaBand label={copy.magentaBand} />

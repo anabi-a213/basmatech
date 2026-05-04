@@ -25,7 +25,12 @@ export type TourCanvasProps = {
   reducedMotion?: boolean;
 };
 
-const DEFAULT_PHASE_HEIGHT_VH = 400;
+// 250vh per walk phase = 200vh full-canvas scrub + 50vh static dwell on the
+// last frame. Was 400vh (200vh scrub + 200vh dead dwell) which produced the
+// "scrolls forever with nothing happening" symptom — half the page had a
+// frozen canvas. Total page goes from 38× viewport-heights down to 25×, which
+// is the upper end of what NN/G's scrollytelling research recommends.
+const DEFAULT_PHASE_HEIGHT_VH = 250;
 const FOYER_CLOSING_HEIGHT_VH = 100;
 
 /**
@@ -109,7 +114,12 @@ export function TourCanvas({
       trigger: wrap,
       start: 'top top',
       end: () => `+=${totalPx}`,
-      scrub: 0.2,
+      // scrub: true (instant) — Lenis already lerps the raw scroll position
+      // (lerp: 0.1) before ScrollTrigger reads it, so adding a second scrub
+      // smoothing layer here compounds the lag and produces a "swimmy" feel
+      // where the canvas drifts behind the actual scroll position.
+      scrub: true,
+      invalidateOnRefresh: true,
       onUpdate: (self: ScrollTrigger) => {
         const scrollPx = self.progress * totalPx;
         // Find active phase
