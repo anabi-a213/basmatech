@@ -41,7 +41,10 @@ export function Pathfinder({ phases, phaseHeightsVh }: PathfinderProps) {
         acc += (h / 100) * vh;
       }
       const total = acc;
-      const y = window.scrollY - offset;
+      // 1px tolerance — Lenis's lerp can leave the document scrollTop one px
+      // short of the target while internally Lenis considers itself at it,
+      // which would make the active dot lag by one phase at the boundary.
+      const y = window.scrollY - offset + 1;
       let active = 0;
       for (let k = 0; k < cumTops.length; k++) if (y >= cumTops[k]) active = k;
       const dots = target.querySelectorAll<HTMLButtonElement>('button[data-phase]');

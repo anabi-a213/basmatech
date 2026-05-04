@@ -122,10 +122,14 @@ export function TourCanvas({
       invalidateOnRefresh: true,
       onUpdate: (self: ScrollTrigger) => {
         const scrollPx = self.progress * totalPx;
-        // Find active phase
+        // Find active phase. +1 tolerance — Lenis lerp + ScrollTrigger float
+        // arithmetic can leave us 0.x px short of a phase boundary at rest;
+        // without tolerance the active phase lags by one at the boundary
+        // (e.g. Pathfinder click for project N lands you on N-1).
         let i = 0;
+        const probe = scrollPx + 1;
         for (let k = 0; k < cumTops.length; k++) {
-          if (scrollPx >= cumTops[k]) i = k;
+          if (probe >= cumTops[k]) i = k;
         }
         if (i !== activePhaseIndexRef.current) activePhaseIndexRef.current = i;
         const phase = spec.phases[i];
