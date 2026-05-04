@@ -51,6 +51,14 @@ export function TourCanvas({
   // be killed and recreated on every phase change, which dropped scroll
   // updates and made the canvas appear stuck.
   const activePhaseIndexRef = useRef(0);
+  // Latest draw target — used so async preload can redraw the freshest frame
+  // after decode completes (otherwise the canvas stays in placeholder mode
+  // when scroll is parked, since onUpdate only fires on movement).
+  const lastDrawRef = useRef<{ phase: Phase | null; isMobile: boolean; frameIndex: number }>({
+    phase: null,
+    isMobile: false,
+    frameIndex: 0,
+  });
   const [_isMobile, setIsMobile] = useState(false);
 
   // Initialize mobile flag + listen for resize
@@ -124,20 +132,36 @@ export function TourCanvas({
         const frameIndex = Math.round(t * maxFrame);
 
         // Draw it.
+        lastDrawRef.current = { phase, isMobile: isMobileNow, frameIndex };
         drawFrame(canvasRef.current, phase, isMobileNow, frameIndex, bg);
 
-        // Pre-warm sliding window
-        void preloadWindow(phase, isMobileNow, frameIndex);
+        // Splash phases (foyer/closing) have no Kling walk by design —
+        // skip preload to avoid 404 console noise.
+        if (!isSplashPhase(phase)) {
+          // Pre-warm sliding window. After decode, redraw with the freshest
+          // target — onUpdate doesn't fire when scroll is parked, so without
+          // this redraw the canvas would stay stuck on the tint gradient
+          // until the user scrolls again.
+          void preloadWindow(phase, isMobileNow, frameIndex).then(() => {
+            const r = lastDrawRef.current;
+            if (r.phase) drawFrame(canvasRef.current, r.phase, r.isMobile, r.frameIndex, bg);
+          });
+        }
 
-        // Approaching end? warm next phase.
+        // Approaching end? warm next phase (skip if next is a splash).
         if (rawT > 0.7 && i + 1 < spec.phases.length) {
-          void preloadNextPhase(spec.phases[i + 1], isMobileNow);
+          const next = spec.phases[i + 1];
+          if (!isSplashPhase(next)) {
+            void preloadNextPhase(next, isMobileNow);
+          }
         }
       },
     });
 
-    // Eager-load frame 0 of phase 0
-    void preloadWindow(spec.phases[0], isMobileViewport(), 0);
+    // Eager-load frame 0 of phase 0 (unless it's a splash phase like foyer)
+    if (!isSplashPhase(spec.phases[0])) {
+      void preloadWindow(spec.phases[0], isMobileViewport(), 0);
+    }
 
     return () => { st.kill(); };
     // NB: activePhaseIndex intentionally NOT in deps — it's a ref, not state.
@@ -208,6 +232,24 @@ export function TourCanvas({
   );
 }
 
+/**
+ * Splash phases are 100vh tinted splash sections — no Kling walk frames
+ * are generated for them. The HTML overlays in the host page provide the
+ * headline/CTA; the canvas just paints the phase tint. Includes the
+ * portfolio foyer/closing and the home c1/c8 bookend chapters.
+ */
+const SPLASH_PHASE_IDS = new Set([
+  'tour-foyer',
+  'tour-closing',
+  'home-c1-threshold',
+  'home-c6-capabilities',
+  'home-c7-proof',
+  'home-c8-invitation',
+]);
+function isSplashPhase(phase: Phase): boolean {
+  return SPLASH_PHASE_IDS.has(phase.phaseId);
+}
+
 const TINT_HEX_FALLBACK: Record<string, string> = {
   mint: '#5FE99A',
   sky: '#5FA9F0',
@@ -244,9 +286,10 @@ function drawFrame(
   ctx.fillRect(0, 0, cw, ch);
 
   if (!cached) {
-    // Phase 1 placeholder mode: no frame loaded yet (Phase 2 will fix this).
-    // Paint the phase tint as a soft radial gradient so the user can see the
-    // canvas + scroll mapping is working even without real assets.
+    // No decoded frame yet — paint the phase tint as a soft radial gradient.
+    // This handles two cases: (a) splash phases (foyer/closing) that have
+    // no Kling walk by design, and (b) the brief moment before the first
+    // frame finishes decoding for a normal walk phase.
     const tintColor = TINT_HEX_FALLBACK[phase.tint] ?? '#FF5A9E';
     const grad = ctx.createRadialGradient(
       cw / 2, ch / 2, 0,
@@ -256,22 +299,6 @@ function drawFrame(
     grad.addColorStop(1, bg);
     ctx.fillStyle = grad;
     ctx.fillRect(0, 0, cw, ch);
-
-    // Phase label
-    ctx.fillStyle = 'rgba(245, 245, 248, 0.92)';
-    ctx.font = '700 ' + Math.round(Math.min(cw, ch) * 0.05) + 'px system-ui, -apple-system, sans-serif';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText(phase.label, cw / 2, ch / 2 - 30);
-
-    // Frame counter
-    ctx.fillStyle = 'rgba(245, 245, 248, 0.55)';
-    ctx.font = '500 ' + Math.round(Math.min(cw, ch) * 0.02) + 'px ui-monospace, "SF Mono", monospace';
-    ctx.fillText(
-      `${phase.phaseId} · frame ${frameIndex} / ${phase.endFrame}`,
-      cw / 2,
-      ch / 2 + 24,
-    );
     return;
   }
   // ImageBitmap and HTMLImageElement both expose width/height directly.
